@@ -17,7 +17,6 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { Divider } from "@mui/material";
 import { useAppDispatch } from "../../utils/helpers";
 import { setModalReset } from "../../store/slice/modal";
-import { getTeacherDetail } from "../../pages/teacher-detail/services/queries";
 import { useEditStaff } from "./service/mutation";
 
 const style = {
