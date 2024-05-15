@@ -19,9 +19,11 @@ import { NavLink } from "react-router-dom";
 import EditStudent from "../../components/edit-student/EditStudent";
 import { getStudentsDataType } from "../../types/QueriesTypes";
 import { getStudents } from "../../services/queries";
+import { deleteStudent } from "../../services/mutations";
 
 function Students() {
   const { data: rows } = getStudents();
+  const delStudent = deleteStudent();
 
   const [selectedStudent, setSelectedTeacher] =
     useState<getStudentsDataType | null>(null);
@@ -51,11 +53,13 @@ function Students() {
     console.log(e, value);
 
     if (reason === "clear") {
-      setShowAllTeachers(true); // Показывать весь список при очистке текстового поля
+      setShowAllTeachers(true);
     }
   };
 
-  const handleDeleteStudent = (id: string) => {};
+  const handleDeleteStudent = (id: string) => {
+    delStudent.mutateAsync({ id: id });
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>

@@ -35,7 +35,6 @@ const style = {
 
 function EditTeacher({ id }: { id: string }) {
   const dispatch = useAppDispatch();
-  const { data } = getTeacherDetail({ id: id });
 
   const editStaff = useEditStaff({ id: id });
 
