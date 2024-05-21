@@ -1,6 +1,5 @@
 import { Enums } from "../enums/Enums";
 import {
-  getRouteArchive,
   getRouteCourses,
   getRouteCoursesDetails,
   getRouteMain,
@@ -18,5 +17,4 @@ export const Consts: Record<Enums, string> = {
   [Enums.STUDENTS_DETAILS]: getRouteStudentsDetails(""),
   [Enums.TEACHERS]: getRouteTeachers(),
   [Enums.TEACHERS_DETAILS]: getRouteTeachersDetails(""),
-  [Enums.ARCHIVE]: getRouteArchive(),
 };

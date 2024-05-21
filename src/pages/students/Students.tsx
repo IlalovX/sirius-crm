@@ -22,7 +22,7 @@ import { getStudents } from "../../services/queries";
 import { deleteStudent } from "../../services/mutations";
 
 function Students() {
-  const { data: rows } = getStudents();
+  const { data: rows } = getStudents({ limit: 10, offset: 1 });
   const delStudent = deleteStudent();
 
   const [selectedStudent, setSelectedTeacher] =
@@ -33,8 +33,7 @@ function Students() {
     e: React.ChangeEvent<{}>,
     value: getStudentsDataType | string | null
   ) => {
-    console.log(e);
-
+    e;
     if (typeof value === "string") {
       const student = rows?.data.data.find((row) => row.first_name === value);
       setSelectedTeacher(student || null);
@@ -116,7 +115,16 @@ function Students() {
                   <TableCell align="right">{row.phone_number}</TableCell>
                   <TableCell align="right">{row.group.title}</TableCell>
                   <TableCell align="right">{row.comment}</TableCell>
-                  <TableCell align="right">{row.created_at}</TableCell>
+                  <TableCell align="right">
+                    {new Date(row.created_at).getDay() < 10
+                      ? `0${new Date(row.created_at).getDay()}`
+                      : new Date(row.created_at).getDay()}
+                    .
+                    {new Date(row.created_at).getMonth() < 10
+                      ? `0${new Date(row.created_at).getDay()}`
+                      : new Date(row.created_at).getDay()}
+                    .{new Date(row.created_at).getFullYear()}
+                  </TableCell>
                   <TableCell align="right">
                     <IconButton
                       edge="end"
@@ -155,7 +163,14 @@ function Students() {
                 </TableCell>
                 <TableCell align="right">{selectedStudent.comment}</TableCell>
                 <TableCell align="right">
-                  {selectedStudent.created_at}
+                  {new Date(selectedStudent.created_at).getDay() < 10
+                    ? `0${new Date(selectedStudent.created_at).getDay()}`
+                    : new Date(selectedStudent.created_at).getDay()}
+                  .
+                  {new Date(selectedStudent.created_at).getMonth() < 10
+                    ? `0${new Date(selectedStudent.created_at).getDay()}`
+                    : new Date(selectedStudent.created_at).getDay()}
+                  .{new Date(selectedStudent.created_at).getFullYear()}
                 </TableCell>
                 <TableCell align="right">
                   <IconButton

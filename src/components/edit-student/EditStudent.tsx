@@ -17,7 +17,6 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { Divider } from "@mui/material";
 import { useAppDispatch } from "../../utils/helpers";
 import { setModalReset } from "../../store/slice/modal";
-import { ADD_COURSE } from "../../db/db";
 import { useEditStudent } from "./service/mutations";
 
 const style = {
@@ -37,6 +36,7 @@ function EditStudent({ id }: { id: string }) {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const editStudent = useEditStudent({ id: id });
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -47,13 +47,17 @@ function EditStudent({ id }: { id: string }) {
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const data = new FormData(e.currentTarget);
+    console.log(data.get(""));
+
     if (data) {
       editStudent
         .mutateAsync({
           comment: data.get("comment") as string,
           first_name: data.get("first_name") as string,
           last_name: data.get("last_name") as string,
+          tg_username: data.get("telegram") as string,
           phone_number: data.get("phone_number") as string,
           status: data.get("status") as string,
         })
@@ -103,7 +107,7 @@ function EditStudent({ id }: { id: string }) {
                   id="outlined-basic"
                   label="First Name"
                   variant="outlined"
-                  name="firstName"
+                  name="first_name"
                   fullWidth
                 />
               </Grid>
@@ -111,7 +115,7 @@ function EditStudent({ id }: { id: string }) {
                 <TextField
                   id="outlined-basic"
                   label="Last Name"
-                  name="lastName"
+                  name="last_name"
                   variant="outlined"
                   fullWidth
                 />
@@ -129,47 +133,26 @@ function EditStudent({ id }: { id: string }) {
                 <TextField
                   id="outlined-basic"
                   label="Phone"
-                  name="phone"
+                  name="phone_number"
                   variant="outlined"
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
-                <Box className="flex gap-5">
-                  <FormControl className="!w-1/2">
-                    <InputLabel id="demo-simple-select-label">
-                      Course
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      name="course"
-                      label="Course"
-                    >
-                      {ADD_COURSE.map((course, index) => (
-                        <MenuItem value={course.value} key={index}>
-                          {course.value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl className="!w-1/2">
-                    <InputLabel id="demo-simple-select-label">
-                      Status
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      name="status"
-                      label="Status"
-                    >
-                      <MenuItem value={"ATTENDING"}>ATTENDING</MenuItem>
-                      <MenuItem value={"PENDING"}>PENDING</MenuItem>
-                      <MenuItem value={"SUSPENDED"}>SUSPENDED</MenuItem>
-                      <MenuItem value={"COMPLETED"}>COMPLETED</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
+                <FormControl className="!w-full">
+                  <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    name="status"
+                    label="Status"
+                  >
+                    <MenuItem value={"ATTENDING"}>ATTENDING</MenuItem>
+                    <MenuItem value={"PENDING"}>PENDING</MenuItem>
+                    <MenuItem value={"SUSPENDED"}>SUSPENDED</MenuItem>
+                    <MenuItem value={"COMPLETED"}>COMPLETED</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <TextField

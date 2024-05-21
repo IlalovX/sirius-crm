@@ -10,20 +10,28 @@ import {
 } from "@mui/material";
 import { useAddStudent } from "./service/mutations";
 
-function AddStudent({ id }: { id: string }) {
+function AddStudent({
+  id,
+  handleClose,
+}: {
+  id: string;
+  handleClose: () => void;
+}) {
   const addStudent = useAddStudent();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     if (data) {
-      addStudent.mutateAsync({
-        first_name: data.get("firstName") as string,
-        last_name: data.get("lastName") as string,
-        phone_number: data.get("phone") as string,
-        group_id: id,
-        comment: data.get("comment") as string,
-        status: data.get("status") as string,
-      });
+      addStudent
+        .mutateAsync({
+          first_name: data.get("firstName") as string,
+          last_name: data.get("lastName") as string,
+          phone_number: data.get("phone") as string,
+          group_id: id,
+          comment: data.get("comment") as string,
+          status: data.get("status") as string,
+        })
+        .then(() => handleClose());
     }
   };
 

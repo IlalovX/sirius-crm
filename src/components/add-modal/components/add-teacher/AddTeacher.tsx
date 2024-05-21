@@ -18,12 +18,12 @@ function AddTeacher({ onClose }: { onClose: () => void }) {
     if (data) {
       addTeacher
         .mutateAsync({
-          firstName: data.get("firstName") as string,
-          lastName: data.get("lastName") as string,
+          first_name: data.get("firstName") as string,
+          last_name: data.get("lastName") as string,
           direction: data.get("direction") as string,
-          phone: data.get("phone") as string,
+          phone_number: data.get("phone") as string,
           role: data.get("role") as string,
-          tg_username: data.get("tg_username") as string,
+          tg_username: data.get("telegram") as string,
         })
         .then(() => {
           onClose();

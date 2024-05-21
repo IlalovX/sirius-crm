@@ -15,6 +15,7 @@ export interface getCourseDetailType {
     status: string;
     is_deleted: boolean;
     created_at: string;
+    students: string[];
   };
   message: string;
 }

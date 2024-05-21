@@ -6,7 +6,7 @@ import { getStaffDetailTypes } from "../types/QueriesTypes";
 
 export function getTeacherDetail({ id }: { id: string }) {
   const dispatch = useAppDispatch();
-  return useQuery<getStaffDetailTypes, any>({
+  return useQuery<getStaffDetailTypes, null>({
     queryKey: ["getTeacherDetail", id],
     queryFn: async () => {
       const res = await $host.get(`/staff/${id}`);

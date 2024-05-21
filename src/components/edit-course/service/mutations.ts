@@ -10,7 +10,12 @@ export function useEditGroup({ id }: { id: string }) {
       return res;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["getCourseDetail"]);
+      queryClient.invalidateQueries({
+        queryKey: ["getCourseDetail"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["getCourses"],
+      });
     },
   });
 }

@@ -9,8 +9,13 @@ export function useEditStaff({ id }: { id: string }) {
       const res = await $host.put(`/staff/${id}`, data);
       return res;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["getTeacherDetail"]);
+    onSuccess: async () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getTeachers"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["getTeacherDetail"],
+      });
     },
   });
 }

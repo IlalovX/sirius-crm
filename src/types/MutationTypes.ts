@@ -1,10 +1,10 @@
 export interface useStaffData {
   role: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   direction: string;
   tg_username: string;
-  phone: string;
+  phone_number: string;
 }
 
 export interface useGroupData {
@@ -27,4 +27,5 @@ export interface useStudentData {
   comment: string;
   phone_number: string;
   group_id?: string;
+  tg_username?: string;
 }

@@ -19,15 +19,23 @@ import {
   Paper,
 } from "@mui/material";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CircleIcon from "@mui/icons-material/Circle";
 import { Fragment } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { useAppDispatch } from "../../utils/helpers";
 import { useState } from "react";
 import { setModalReset } from "../../store/slice/modal";
 import AddStudent from "../../components/add-student/AddStudent";
 import { getCourseDetail } from "./services/queries";
 import { getTeacherDetail } from "../teacher-detail/services/queries";
+import { useQueries } from "@tanstack/react-query";
+import { $host } from "../../services/requestServices";
+import { setData } from "../../store/slice/courseDetail";
+import { useAppDispatch, useAppSelector } from "../../utils/helpers";
+import { NavLink } from "react-router-dom";
+import EditStudent from "../../components/edit-student/EditStudent";
+import { getStudentDetailType } from "../student-detail/types/QueriesTypes";
+import { deleteStudent } from "../../services/mutations";
 
 const style = {
   position: "absolute" as "absolute",
@@ -43,13 +51,35 @@ const style = {
 };
 
 function CourseDetail() {
+  const [open, setOpen] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const courseStudents = useAppSelector(
+    (state) => state.courseDetail.courseStudents
+  );
+  const delStudent = deleteStudent();
   const { data: course } = getCourseDetail();
   const { data: teacher } = getTeacherDetail({
     id: course?.data?.teacher_id as string,
   });
 
-  const [open, setOpen] = useState(false);
-  const dispatch = useAppDispatch();
+  useQueries({
+    queries:
+      course?.data?.students?.map((item) => {
+        return {
+          queryKey: [course, item],
+          queryFn: async () => {
+            const res = await $host.get(`/student/${item}`);
+            return res.data;
+          },
+          onSuccess: (res: getStudentDetailType) => {
+            dispatch(setData(res.data));
+          },
+          refetchOnWindowFocus: false,
+          retry: false,
+        };
+      }) ?? [],
+  });
 
   const handleOpen = () => {
     setOpen(true);
@@ -59,6 +89,10 @@ function CourseDetail() {
     setOpen(false);
   };
 
+  const handleDeleteStudent = (id: string) => {
+    delStudent.mutateAsync({ id: id });
+  };
+
   return (
     <Box>
       <List className="space-y-10">
@@ -66,7 +100,7 @@ function CourseDetail() {
           <ListItem className="!p-0">
             <ListItemAvatar>
               <Avatar sx={{ height: 70, width: 70, marginRight: "10px" }}>
-                {teacher?.data.first_name}
+                {teacher?.data.first_name[0]}
               </Avatar>
             </ListItemAvatar>
             <ListItemText
@@ -199,35 +233,56 @@ function CourseDetail() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {/* {course?.data?.map((row, index) => (
-							<TableRow key={row.label}>
-							<TableCell component="th" scope="row">
-								<Avatar
-									sx={{ height: 40, width: 40 }}
-									alt={row.label}
-									src={row.photo}
-								/>
-							</TableCell>
-							<TableCell component="th" scope="row">
-								<NavLink to={`/students/${+index + 1}`}>
-									{row.label}
-								</NavLink>
-							</TableCell>
-							<TableCell align="right">{row.telegram}</TableCell>
-							<TableCell align="right">{row.phone}</TableCell>
-							<TableCell align="right">{row.course}</TableCell>
-							<TableCell align="right">{row.comment}</TableCell>
-							<TableCell align="right">{row.record}</TableCell>
-							<TableCell align="right">
-								<IconButton edge="end" aria-label="delete">
-									<DeleteIcon />
-								</IconButton>
-							</TableCell>
-							<TableCell align="right">
-								<EditStudent id="1" />
-							</TableCell>
-							</TableRow>
-						))} */}
+                {!!courseStudents &&
+                  courseStudents?.map((student, index) => (
+                    <TableRow key={index}>
+                      <TableCell component="th" scope="row">
+                        <Avatar
+                          sx={{ height: 40, width: 40 }}
+                          alt={student.id}
+                        />
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        <NavLink to={`/students/${student?.id}`}>
+                          {student?.first_name}
+                        </NavLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        {!!student?.tg_username
+                          ? student.tg_username
+                          : "Не указано"}
+                      </TableCell>
+                      <TableCell align="right">
+                        {student?.phone_number}
+                      </TableCell>
+                      <TableCell align="right">
+                        {student?.group.title}
+                      </TableCell>
+                      <TableCell align="right">{student?.comment}</TableCell>
+                      <TableCell align="right">
+                        {new Date(student?.created_at).getDay() < 10
+                          ? `0${new Date(student?.created_at).getDay()}`
+                          : new Date(student?.created_at).getDay()}
+                        .
+                        {new Date(student?.created_at).getMonth() < 10
+                          ? `0${new Date(student?.created_at).getDay()}`
+                          : new Date(student?.created_at).getDay()}
+                        .{new Date(student?.created_at).getFullYear()}
+                      </TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() => handleDeleteStudent(student.id)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="right">
+                        <EditStudent id={student?.id} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -259,6 +314,7 @@ function CourseDetail() {
           <Box sx={{ flexGrow: 1 }}>
             <AddStudent
               id={(course?.data?.id as string) && (course?.data?.id as string)}
+              handleClose={handleClose}
             />
           </Box>
         </Box>

@@ -28,6 +28,3 @@ export const getRouteStudentsDetails = (id: string) => {
   }
   return "/students/:id";
 };
-export const getRouteArchive = () => {
-  return "/archive";
-};

@@ -6,7 +6,6 @@ export const MENU = [
   { value: "Courses", path: Consts[Enums.COURSES] },
   { value: "Students", path: Consts[Enums.STUDENTS] },
   { value: "Teachers", path: Consts[Enums.TEACHERS] },
-  { value: "Archive", path: Consts[Enums.ARCHIVE] },
 ];
 
 export const ADD_NEW = [{ title: "Staff" }, { title: "Course" }];

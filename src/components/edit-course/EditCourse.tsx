@@ -39,7 +39,7 @@ const style = {
 
 function EditCourse({ id }: { id: string }) {
   const dispatch = useAppDispatch();
-  const { data: teachers } = getStaff();
+  const { data: teachers } = getStaff({ limit: 0, offset: 1 });
   const editGroup = useEditGroup({ id: id });
   const [open, setOpen] = useState(false);
 
@@ -56,20 +56,24 @@ function EditCourse({ id }: { id: string }) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     if (data) {
-      editGroup.mutateAsync({
-        description: data.get("desc") as string,
-        duration: data.get("duration") as string,
-        lesson_days: data.get("days") as string,
-        lesson_duration: data.get("lessonDuration") as string,
-        lesson_time: data.get("time") as string,
-        price: Number(data.get("price")) as number,
-        status: data.get("progress") as string,
-        teacher_id: teachers?.data.data.find(
-          (item) => item.first_name === (data.get("teacher") as string)
-        )?.id as string,
-        teacher_name: data.get("teacher") as string,
-        title: data.get("title") as string,
-      });
+      editGroup
+        .mutateAsync({
+          description: data.get("desc") as string,
+          duration: data.get("duration") as string,
+          lesson_days: data.get("days") as string,
+          lesson_duration: data.get("lessonDuration") as string,
+          lesson_time: data.get("time") as string,
+          price: Number(data.get("price")) as number,
+          status: data.get("progress") as string,
+          teacher_id: teachers?.data.data.find(
+            (item) => item.first_name === (data.get("teacher") as string)
+          )?.id as string,
+          teacher_name: data.get("teacher") as string,
+          title: data.get("title") as string,
+        })
+        .then(() => {
+          handleClose();
+        });
     }
   };
   return (

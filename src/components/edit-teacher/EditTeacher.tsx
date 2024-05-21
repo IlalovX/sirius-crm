@@ -50,15 +50,13 @@ function EditTeacher({ id }: { id: string }) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     if (data) {
-      console.log(data);
-
       editStaff
         .mutateAsync({
-          firstName: data.get("firstName") as string,
-          lastName: data.get("lastName") as string,
+          first_name: data.get("firstName") as string,
+          last_name: data.get("lastName") as string,
           tg_username: data.get("tg_username") as string,
           direction: data.get("direction") as string,
-          phone: data.get("phone") as string,
+          phone_number: data.get("phone") as string,
           role: data.get("role") as string,
         })
         .then(() => {
@@ -128,17 +126,6 @@ function EditTeacher({ id }: { id: string }) {
                 <TextField
                   id="outlined-basic"
                   fullWidth
-                  label="Direction"
-                  name="direction"
-                  variant="outlined"
-                  autoComplete="direction"
-                  required
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="outlined-basic"
-                  fullWidth
                   label="Telegram User"
                   name="tg_username"
                   variant="outlined"
@@ -171,6 +158,17 @@ function EditTeacher({ id }: { id: string }) {
                     <MenuItem value={"TEACHER"}>TEACHER</MenuItem>
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="outlined-basic"
+                  fullWidth
+                  label="Direction"
+                  name="direction"
+                  variant="outlined"
+                  autoComplete="direction"
+                  required
+                />
               </Grid>
             </Grid>
             <Box className="text-end">

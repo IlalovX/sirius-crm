@@ -33,7 +33,9 @@ function StudentDetail() {
           secondaryAction={<EditStudent id={student?.data?.id as string} />}
         >
           <ListItemAvatar className="!p-0">
-            <Avatar sx={{ height: 120, width: 120 }}>F</Avatar>
+            <Avatar sx={{ height: 120, width: 120 }}>
+              {student?.data.first_name[0]}
+            </Avatar>
           </ListItemAvatar>
           <IconButton
             edge="end"
@@ -90,7 +92,9 @@ function StudentDetail() {
                     component="span"
                     color="text.primary"
                   >
-                    {student?.data?.tg_username}
+                    {!!student?.data?.tg_username
+                      ? student.data.tg_username
+                      : "Не указано"}
                   </Typography>
                 </Fragment>
               }
@@ -160,7 +164,20 @@ function StudentDetail() {
                     variant="body2"
                     color="text.primary"
                   >
-                    {student?.data?.created_at}
+                    {new Date(student?.data.created_at as string).getDay() < 10
+                      ? `0${new Date(
+                          student?.data.created_at as string
+                        ).getDay()}`
+                      : new Date(student?.data.created_at as string).getDay()}
+                    .
+                    {new Date(student?.data.created_at as string).getMonth() <
+                    10
+                      ? `0${new Date(
+                          student?.data.created_at as string
+                        ).getDay()}`
+                      : new Date(student?.data.created_at as string).getDay()}
+                    .
+                    {new Date(student?.data.created_at as string).getFullYear()}
                   </Typography>
                 </Fragment>
               }

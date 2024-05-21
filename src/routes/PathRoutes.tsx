@@ -18,7 +18,6 @@ const Teachers = lazy(() => import("../pages/teachers/Teachers"));
 const TeacherDetail = lazy(
   () => import("../pages/teacher-detail/TeacherDetail")
 );
-const Archive = lazy(() => import("../pages/archive/Archive"));
 
 function PathRoutes() {
   return (
@@ -73,14 +72,6 @@ function PathRoutes() {
             }
           />
 
-          <Route
-            path={Consts[Enums.ARCHIVE]}
-            element={
-              <Suspense>
-                <Archive />
-              </Suspense>
-            }
-          />
           <Route
             path={Consts[Enums.TEACHERS]}
             element={

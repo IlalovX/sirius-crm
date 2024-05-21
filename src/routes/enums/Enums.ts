@@ -6,5 +6,4 @@ export enum Enums {
   TEACHERS_DETAILS = "/teachers/:id",
   STUDENTS = "/students",
   STUDENTS_DETAILS = "/students/:id",
-  ARCHIVE = "/archive",
 }

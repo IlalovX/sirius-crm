@@ -23,9 +23,9 @@ import { getCourses, getStudents, getStaff } from "../../services/queries";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function Home() {
-  const { data: teachers } = getStaff();
-  const { data: courses } = getCourses();
-  const { data: students } = getStudents();
+  const { data: teachers } = getStaff({ limit: 0, offset: 1 });
+  const { data: courses } = getCourses({ limit: 0, offset: 1 });
+  const { data: students } = getStudents({ limit: 0, offset: 1 });
 
   return (
     <Fragment>
@@ -208,7 +208,7 @@ function Home() {
                             >
                               <ListItemAvatar>
                                 <Avatar sx={{ height: 50, width: 50 }}>
-                                  {teacher.first_name}
+                                  {teacher.first_name[0]}
                                 </Avatar>
                               </ListItemAvatar>
                               <ListItemText

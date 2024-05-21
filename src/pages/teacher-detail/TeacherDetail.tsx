@@ -127,7 +127,9 @@ function TeacherDetail() {
                     className="space-x-5"
                   >
                     <span>
-                      {teacher?.data?.groups.map((item) => item.title)}
+                      {!!teacher?.data?.groups.length
+                        ? teacher?.data?.groups.map((item) => item.title)
+                        : "Не указано"}
                     </span>
                   </Typography>
                 </Fragment>

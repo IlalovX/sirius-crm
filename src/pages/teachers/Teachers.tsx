@@ -22,7 +22,7 @@ import { getStaffDataType } from "../../types/QueriesTypes";
 import { deleteStaff } from "../../services/mutations";
 
 function Teachers() {
-  const { data: staffs } = getStaff();
+  const { data: staffs } = getStaff({ limit: 0, offset: 1 });
   const delStaff = deleteStaff();
 
   const [selectedTeacher, setSelectedTeacher] =
@@ -83,7 +83,11 @@ function Teachers() {
         />
       </header>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table
+          sx={{ minWidth: 650 }}
+          aria-label="simple table"
+          padding="normal"
+        >
           <TableHead>
             <TableRow>
               <TableCell>
@@ -108,7 +112,10 @@ function Teachers() {
                     />
                   </TableCell>
                   <TableCell component="th" scope="row">
-                    <NavLink to={`/teachers/${item.id}`}>
+                    <NavLink
+                      to={`/teachers/${item.id}`}
+                      className="text-blue-500 underline"
+                    >
                       {item.first_name}
                     </NavLink>
                   </TableCell>

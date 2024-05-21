@@ -16,7 +16,6 @@ import ListItemText from "@mui/material/ListItemText";
 import GroupIcon from "@mui/icons-material/Group";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LaptopIcon from "@mui/icons-material/Laptop";
-import ArchiveIcon from "@mui/icons-material/Archive";
 import MenuBook from "@mui/icons-material/MenuBook";
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
@@ -161,8 +160,6 @@ export default function MiniDrawer() {
                       <DashboardIcon />
                     ) : item.value === "Courses" ? (
                       <LaptopIcon />
-                    ) : item.value === "Archive" ? (
-                      <ArchiveIcon />
                     ) : item.value === "Teachers" ? (
                       <MenuBook />
                     ) : (

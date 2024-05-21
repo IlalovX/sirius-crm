@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import ModalReducer from "./slice/modal";
 import TeacherDetailReducer from "./slice/teacherDetail";
+import CourseDetailReducer from "./slice/courseDetail";
 
 export const store = configureStore({
   reducer: {
     modal: ModalReducer,
     teacherDetail: TeacherDetailReducer,
+    courseDetail: CourseDetailReducer,
   },
 });
 
