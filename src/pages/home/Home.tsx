@@ -23,7 +23,7 @@ import { getCourses, getStudents, getStaff } from "../../services/queries";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function Home() {
-  const { data: teachers } = getStaff({ limit: 0, offset: 1 });
+  const { data: teachers } = getStaff({ limit: 0, offset: 1, status: true });
   const { data: courses } = getCourses({ limit: 0, offset: 1 });
   const { data: students } = getStudents({ limit: 0, offset: 1 });
 

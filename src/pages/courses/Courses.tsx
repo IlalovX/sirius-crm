@@ -29,7 +29,14 @@ function Courses() {
   const [filteredCourses, setFilteredCourses] = useState(
     courses?.data?.data || []
   );
-  console.log(filteredCourses);
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setFilter(event.target.value as string);
+  };
+
+  const handleDeleteCourse = (id: string) => {
+    delCourse.mutateAsync({ id: id });
+  };
 
   useEffect(() => {
     if (courses) {
@@ -68,14 +75,6 @@ function Courses() {
       setFilteredCourses(updatedCourses);
     }
   }, [courses, filter]);
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setFilter(event.target.value as string);
-  };
-
-  const handleDeleteCourse = (id: string) => {
-    delCourse.mutateAsync({ id: id });
-  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>

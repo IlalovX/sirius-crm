@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Fragment } from "react";
-import { getTeacherDetail } from "./services/queries";
+import { getStaffDetail } from "./services/queries";
 import { useNavigate, useParams } from "react-router-dom";
 import EditTeacher from "../../components/edit-teacher/EditTeacher";
 import { deleteStaff } from "../../services/mutations";
@@ -19,7 +19,10 @@ function TeacherDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const delTeacher = deleteStaff();
-  const { data: teacher } = getTeacherDetail({ id: id as string });
+  const { data: teacher } = getStaffDetail({
+    id: id as string,
+    status: true,
+  });
 
   const handleDeleteTeacher = () => {
     delTeacher

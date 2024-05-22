@@ -17,7 +17,8 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { Divider } from "@mui/material";
 import { useAppDispatch } from "../../utils/helpers";
 import { setModalReset } from "../../store/slice/modal";
-import { useEditStudent } from "./service/mutations";
+import { useEditStudent } from "./services/mutations";
+import { getStudentDetail } from "../../pages/student-detail/services/queries";
 
 const style = {
   position: "absolute" as "absolute",
@@ -36,6 +37,7 @@ function EditStudent({ id }: { id: string }) {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const editStudent = useEditStudent({ id: id });
+  const { data: student } = getStudentDetail({ id: id, open: open });
 
   const handleOpen = () => {
     setOpen(true);
@@ -49,8 +51,6 @@ function EditStudent({ id }: { id: string }) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    console.log(data.get(""));
-
     if (data) {
       editStudent
         .mutateAsync({
@@ -108,6 +108,7 @@ function EditStudent({ id }: { id: string }) {
                   label="First Name"
                   variant="outlined"
                   name="first_name"
+                  defaultValue={student?.data.first_name}
                   fullWidth
                 />
               </Grid>
@@ -117,6 +118,7 @@ function EditStudent({ id }: { id: string }) {
                   label="Last Name"
                   name="last_name"
                   variant="outlined"
+                  defaultValue={student?.data.last_name}
                   fullWidth
                 />
               </Grid>
@@ -126,6 +128,7 @@ function EditStudent({ id }: { id: string }) {
                   label="Telegram User"
                   name="telegram"
                   variant="outlined"
+                  defaultValue={student?.data.tg_username}
                   fullWidth
                 />
               </Grid>
@@ -135,6 +138,7 @@ function EditStudent({ id }: { id: string }) {
                   label="Phone"
                   name="phone_number"
                   variant="outlined"
+                  defaultValue={student?.data.phone_number}
                   fullWidth
                 />
               </Grid>
@@ -146,6 +150,7 @@ function EditStudent({ id }: { id: string }) {
                     id="demo-simple-select"
                     name="status"
                     label="Status"
+                    defaultValue={student?.data.status}
                   >
                     <MenuItem value={"ATTENDING"}>ATTENDING</MenuItem>
                     <MenuItem value={"PENDING"}>PENDING</MenuItem>
@@ -161,6 +166,7 @@ function EditStudent({ id }: { id: string }) {
                   name="comment"
                   multiline
                   rows={4}
+                  defaultValue={student?.data.comment}
                   fullWidth
                 />
               </Grid>

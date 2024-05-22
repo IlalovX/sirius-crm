@@ -27,12 +27,12 @@ import { useState } from "react";
 import { setModalReset } from "../../store/slice/modal";
 import AddStudent from "../../components/add-student/AddStudent";
 import { getCourseDetail } from "./services/queries";
-import { getTeacherDetail } from "../teacher-detail/services/queries";
+import { getStaffDetail } from "../teacher-detail/services/queries";
 import { useQueries } from "@tanstack/react-query";
 import { $host } from "../../services/requestServices";
 import { setData } from "../../store/slice/courseDetail";
 import { useAppDispatch, useAppSelector } from "../../utils/helpers";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import EditStudent from "../../components/edit-student/EditStudent";
 import { getStudentDetailType } from "../student-detail/types/QueriesTypes";
 import { deleteStudent } from "../../services/mutations";
@@ -51,16 +51,17 @@ const style = {
 };
 
 function CourseDetail() {
+  const { id } = useParams();
   const [open, setOpen] = useState(false);
-
   const dispatch = useAppDispatch();
   const courseStudents = useAppSelector(
     (state) => state.courseDetail.courseStudents
   );
   const delStudent = deleteStudent();
-  const { data: course } = getCourseDetail();
-  const { data: teacher } = getTeacherDetail({
+  const { data: course } = getCourseDetail({ id: id as string, open: true });
+  const { data: teacher } = getStaffDetail({
     id: course?.data?.teacher_id as string,
+    status: true,
   });
 
   useQueries({

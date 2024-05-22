@@ -14,10 +14,11 @@ import { Fragment } from "react";
 import EditStudent from "../../components/edit-student/EditStudent";
 import { getStudentDetail } from "./services/queries";
 import { deleteStudent } from "../../services/mutations";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function StudentDetail() {
-  const { data: student } = getStudentDetail();
+  const { id } = useParams();
+  const { data: student } = getStudentDetail({ id: id as string, open: true });
   const delStudent = deleteStudent();
   const navigate = useNavigate();
 

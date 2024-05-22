@@ -25,7 +25,15 @@ export function getStudents({
   });
 }
 
-export function getStaff({ limit, offset }: { limit: number; offset: number }) {
+export function getStaff({
+  limit,
+  offset,
+  status,
+}: {
+  limit: number;
+  offset: number;
+  status: boolean;
+}) {
   return useQuery<getStaffsType, any>({
     queryKey: ["getTeachers"],
     queryFn: async () => {
@@ -35,6 +43,7 @@ export function getStaff({ limit, offset }: { limit: number; offset: number }) {
       return res.data;
     },
     refetchOnWindowFocus: false,
+    enabled: status,
   });
 }
 

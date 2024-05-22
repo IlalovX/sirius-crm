@@ -7,23 +7,19 @@ import {
   TableHead,
   TableRow,
   Paper,
-  IconButton,
   Box,
   TextField,
   Autocomplete,
   Avatar,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import CircleIcon from "@mui/icons-material/Circle";
 import { NavLink } from "react-router-dom";
 import EditTeacher from "../../components/edit-teacher/EditTeacher";
 import { getStaff } from "../../services/queries";
 import { getStaffDataType } from "../../types/QueriesTypes";
-import { deleteStaff } from "../../services/mutations";
 
 function Teachers() {
-  const { data: staffs } = getStaff({ limit: 0, offset: 1 });
-  const delStaff = deleteStaff();
+  const { data: staffs } = getStaff({ limit: 0, offset: 1, status: true });
 
   const [selectedTeacher, setSelectedTeacher] =
     React.useState<getStaffDataType | null>(null);
@@ -57,10 +53,6 @@ function Teachers() {
     if (reason === "clear") {
       setShowAllTeachers(true); // Показывать весь список при очистке текстового поля
     }
-  };
-
-  const handleDeleteStaff = (id: string) => {
-    delStaff.mutateAsync({ id: id as string });
   };
 
   return (
@@ -97,7 +89,6 @@ function Teachers() {
               <TableCell align="right">Telegram User</TableCell>
               <TableCell align="right">Phone</TableCell>
               <TableCell align="right">Course</TableCell>
-              <TableCell align="right">Delete</TableCell>
               <TableCell align="right">Edit</TableCell>
             </TableRow>
           </TableHead>
@@ -123,15 +114,6 @@ function Teachers() {
                   <TableCell align="right">{item.phone_number}</TableCell>
                   <TableCell align="right">{item.direction}</TableCell>
                   <TableCell align="right">
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteStaff(item.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell align="right">
                     <EditTeacher id={item.id} />
                   </TableCell>
                 </TableRow>
@@ -156,15 +138,7 @@ function Teachers() {
                   {selectedTeacher.phone_number}
                 </TableCell>
                 <TableCell align="right">{selectedTeacher.direction}</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleDeleteStaff(selectedTeacher.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+
                 <TableCell align="right">
                   <EditTeacher id={selectedTeacher.id} />
                 </TableCell>

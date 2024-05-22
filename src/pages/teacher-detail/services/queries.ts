@@ -4,7 +4,13 @@ import { useAppDispatch } from "../../../utils/helpers";
 import { setTeacherDetail } from "../../../store/slice/teacherDetail";
 import { getStaffDetailTypes } from "../types/QueriesTypes";
 
-export function getTeacherDetail({ id }: { id: string }) {
+export function getStaffDetail({
+  id,
+  status,
+}: {
+  id: string;
+  status: boolean;
+}) {
   const dispatch = useAppDispatch();
   return useQuery<getStaffDetailTypes, null>({
     queryKey: ["getTeacherDetail", id],
@@ -13,5 +19,7 @@ export function getTeacherDetail({ id }: { id: string }) {
       dispatch(setTeacherDetail(res.data));
       return res.data;
     },
+    enabled: !!id && status,
+    refetchOnWindowFocus: false,
   });
 }

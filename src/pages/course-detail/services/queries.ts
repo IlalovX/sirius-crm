@@ -1,10 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { $host } from "../../../services/requestServices";
-import { useParams } from "react-router-dom";
 import { getCourseDetailType } from "../types/QueriesTypes";
 
-export function getCourseDetail() {
-  const { id } = useParams();
+export function getCourseDetail({ id, open }: { id: string; open: boolean }) {
   return useQuery<getCourseDetailType, any>(
     ["getCourseDetail", id],
     async () => {
@@ -12,6 +10,7 @@ export function getCourseDetail() {
       return res.data;
     },
     {
+      enabled: !!id && open,
       refetchOnWindowFocus: false,
     }
   );

@@ -12,18 +12,18 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TimePicker } from "@mui/x-date-pickers/";
 import { useAppDispatch, useAppSelector } from "../../../../utils/helpers";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import { setModalCourseStep } from "../../../../store/slice/modal";
 import { useAddGroup } from "../../../../services/mutations";
-import { getTeacherDetail } from "../../../../pages/teacher-detail/services/queries";
+import { getStaffDetail } from "../../../../pages/teacher-detail/services/queries";
 
 function AddCourse({ onClose }: { onClose: () => void }) {
   const { teacherId, course } = useAppSelector((item) => item.modal);
-  const { data: teacher } = getTeacherDetail({ id: teacherId as string });
+  const { data: teacher } = getStaffDetail({
+    id: teacherId as string,
+    status: true,
+  });
   const dispatch = useAppDispatch();
   const addGroup = useAddGroup();
 
@@ -109,10 +109,16 @@ function AddCourse({ onClose }: { onClose: () => void }) {
                 <MenuItem value={"ODD_DAYS"}>ODD_DAYS</MenuItem>
               </Select>
             </FormControl>
-
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <TimePicker label="Time" className="!w-1/2" name="time" />
-            </LocalizationProvider>
+            <TextField
+              id="time"
+              className="!w-1/2"
+              type="time"
+              label="Lesson Time"
+              name="time"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
           </Box>
         </ListItem>
         <ListItem className="!p-0">
