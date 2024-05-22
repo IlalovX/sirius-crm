@@ -162,7 +162,11 @@ function CourseDetail() {
                   color="text.primary"
                   className="space-x-5"
                 >
-                  <span>{course?.data?.lesson_days}</span>
+                  <span>
+                    {course?.data?.lesson_days === "ODD_DAYS"
+                      ? "Пн, Ср, Пт"
+                      : "Вт, Чт, Сб"}
+                  </span>
                   <span>{course?.data?.lesson_time}</span>
                 </Typography>
               </Fragment>
