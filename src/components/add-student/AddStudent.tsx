@@ -27,6 +27,7 @@ function AddStudent({
           first_name: data.get("firstName") as string,
           last_name: data.get("lastName") as string,
           phone_number: data.get("phone") as string,
+          tg_username: data.get("tg_username") as string,
           group_id: id,
           comment: data.get("comment") as string,
           status: data.get("status") as string,
@@ -57,7 +58,15 @@ function AddStudent({
               fullWidth
             />
           </Grid>
-
+          <Grid item xs={6}>
+            <TextField
+              id="outlined-basic"
+              label="Telegram User"
+              name="tg_username"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
           <Grid item xs={6}>
             <TextField
               id="outlined-basic"
@@ -67,7 +76,8 @@ function AddStudent({
               fullWidth
             />
           </Grid>
-          <Grid item xs={6}>
+
+          <Grid item xs={12}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Status</InputLabel>
               <Select

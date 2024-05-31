@@ -43,7 +43,12 @@ function EditCourse({ id }: { id: string }) {
     id: id as string,
     open: open,
   });
-  const { data: teachers } = getStaff({ limit: 0, offset: 1, status: open });
+  const { data: teachers } = getStaff({
+    limit: 0,
+    offset: 1,
+    viewModalStatus: open,
+    is_deleted: false,
+  });
 
   const handleOpen = () => {
     setOpen(true);
@@ -61,7 +66,7 @@ function EditCourse({ id }: { id: string }) {
       editGroup
         .mutateAsync({
           description: data.get("desc") as string,
-          duration: data.get("duration") as string,
+          duration: `${data.get("duration") as string} month`,
           lesson_days: data.get("days") as string,
           lesson_duration: data.get("lessonDuration") as string,
           lesson_time: data.get("time") as string,
@@ -90,182 +95,193 @@ function EditCourse({ id }: { id: string }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          <Box sx={style}>
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Edit Course
-              </Typography>
-              <IconButton onClick={handleClose} edge="end" aria-label="edit">
-                <CancelRoundedIcon />
-              </IconButton>
+        <Box sx={style}>
+          {isLoading ? (
+            <Box className="flex items-center justify-center">
+              <span className="text-4xl">Loading...</span>
             </Box>
-            <Divider variant="fullWidth" />
-            <Box
-              sx={{ flexGrow: 1 }}
-              className="my-5 space-y-5"
-              component="form"
-              onSubmit={handleSubmit}
-            >
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Teacher
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Course"
-                      name="teacher"
-                      defaultValue={
-                        teachers?.data.data.find(
-                          (teacher) => teacher.id === course?.data.teacher_id
-                        )?.first_name
-                      }
-                    >
-                      {teachers?.data.data.map((teacher, index) => (
-                        <MenuItem key={index} value={teacher.first_name}>
-                          {teacher.first_name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Course
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Course"
-                      name="title"
-                      defaultValue={course?.data.title}
-                    >
-                      {ADD_COURSE.map((course, index) => (
-                        <MenuItem key={index} value={course.value}>
-                          {course.value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <Box className="flex gap-5">
-                    <FormControl className="!w-1/2">
-                      <InputLabel id="demo-simple-select-label" required>
-                        Days
+          ) : (
+            <Box>
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Edit Course
+                </Typography>
+                <IconButton onClick={handleClose} edge="end" aria-label="edit">
+                  <CancelRoundedIcon />
+                </IconButton>
+              </Box>
+              <Divider variant="fullWidth" />
+              <Box
+                sx={{ flexGrow: 1 }}
+                className="my-5 space-y-5"
+                component="form"
+                onSubmit={handleSubmit}
+              >
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Teacher
                       </InputLabel>
                       <Select
-                        name="days"
-                        label="Days"
-                        defaultValue={course?.data.lesson_days}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Course"
+                        name="teacher"
+                        defaultValue={
+                          teachers?.data.data.find(
+                            (teacher) => teacher.id === course?.data.teacher_id
+                          )?.first_name
+                        }
                       >
-                        <MenuItem value={"EVEN_DAYS"}>EVEN_DAYS</MenuItem>
-                        <MenuItem value={"ODD_DAYS"}>ODD_DAYS</MenuItem>
+                        {teachers?.data.data.map((teacher, index) => (
+                          <MenuItem key={index} value={teacher.first_name}>
+                            {teacher.first_name}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
-                    <TextField
-                      id="time"
-                      className="!w-1/2"
-                      type="time"
-                      label="Lesson Time"
-                      name="time"
-                      defaultValue={course?.data.lesson_time}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <Box className="flex gap-5">
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Course
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Course"
+                        name="title"
+                        defaultValue={course?.data.title}
+                      >
+                        {ADD_COURSE.map((course, index) => (
+                          <MenuItem key={index} value={course.value}>
+                            {course.value}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box className="flex gap-5">
+                      <FormControl className="!w-1/2">
+                        <InputLabel id="demo-simple-select-label" required>
+                          Days
+                        </InputLabel>
+                        <Select
+                          name="days"
+                          label="Days"
+                          defaultValue={course?.data.lesson_days}
+                        >
+                          <MenuItem value={"EVEN_DAYS"}>EVEN_DAYS</MenuItem>
+                          <MenuItem value={"ODD_DAYS"}>ODD_DAYS</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <TextField
+                        id="time"
+                        className="!w-1/2"
+                        type="time"
+                        label="Lesson Time"
+                        name="time"
+                        defaultValue={course?.data.lesson_time}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box className="flex gap-5">
+                      <TextField
+                        id="outlined-multiline-static"
+                        label="Price"
+                        className="!w-full"
+                        name="price"
+                        defaultValue={course?.data.price}
+                        required
+                      />
+                      <FormControl className="!w-full">
+                        <InputLabel id="demo-simple-select-label" required>
+                          Progress
+                        </InputLabel>
+                        <Select
+                          label="Progress"
+                          name="progress"
+                          defaultValue={course?.data.status}
+                        >
+                          <MenuItem value={"COMPLETED"}>COMPLETED</MenuItem>
+                          <MenuItem value={"SUSPENDED"}>SUSPENDED</MenuItem>
+                          <MenuItem value={"PENDING"}>PENDING</MenuItem>
+                          <MenuItem value={"ACTIVE"}>ACTIVE</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} className="flex gap-5">
+                    <FormControl className="!w-full">
+                      <InputLabel id="demo-simple-select-label">
+                        Lesson Duration
+                      </InputLabel>
+                      <Select
+                        label="Lesson Duration"
+                        name="duration"
+                        required
+                        autoComplete="lessonDuration"
+                        defaultValue={course?.data.duration[0]}
+                      >
+                        <MenuItem value={"2"}>2</MenuItem>
+                        <MenuItem value={"6"}>6</MenuItem>
+                        <MenuItem value={"8"}>8</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl className="!w-full">
+                      <InputLabel id="demo-simple-select-label">
+                        Lesson Duration
+                      </InputLabel>
+                      <Select
+                        label="Lesson Duration"
+                        name="lessonDuration"
+                        required
+                        autoComplete="lessonDuration"
+                        defaultValue={course?.data.lesson_duration[0]}
+                      >
+                        <MenuItem value={"1"}>1</MenuItem>
+                        <MenuItem value={"1.5"}>1.5</MenuItem>
+                        <MenuItem value={"2"}>2</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
                     <TextField
                       id="outlined-multiline-static"
-                      label="Price"
-                      className="!w-full"
-                      name="price"
-                      defaultValue={course?.data.price}
+                      label="Description"
+                      name="desc"
+                      autoComplete="desc"
+                      rows={3}
+                      multiline
+                      fullWidth
+                      defaultValue={course?.data.description}
                       required
                     />
-                    <FormControl className="!w-full">
-                      <InputLabel id="demo-simple-select-label" required>
-                        Progress
-                      </InputLabel>
-                      <Select
-                        label="Progress"
-                        name="progress"
-                        defaultValue={course?.data.status}
-                      >
-                        <MenuItem value={"COMPLETED"}>COMPLETED</MenuItem>
-                        <MenuItem value={"SUSPENDED"}>SUSPENDED</MenuItem>
-                        <MenuItem value={"PENDING"}>PENDING</MenuItem>
-                        <MenuItem value={"ACTIVE"}>ACTIVE</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Box>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} className="flex gap-5">
-                  <TextField
-                    id="outlined-multiline-static"
-                    label="Duration"
-                    className="!w-full"
-                    name="duration"
-                    autoComplete="duration"
-                    defaultValue={course?.data.lesson_duration}
-                    required
-                  />
-                  <FormControl className="!w-full">
-                    <InputLabel id="demo-simple-select-label">
-                      Lesson Duration
-                    </InputLabel>
-                    <Select
-                      label="Lesson Duration"
-                      name="lessonDuration"
-                      required
-                      autoComplete="lessonDuration"
-                      defaultValue={course?.data.lesson_duration}
-                    >
-                      <MenuItem value={"1"}>1</MenuItem>
-                      <MenuItem value={"1.5"}>1.5</MenuItem>
-                      <MenuItem value={"2"}>2</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    id="outlined-multiline-static"
-                    label="Description"
-                    name="desc"
-                    autoComplete="desc"
-                    rows={3}
-                    multiline
-                    fullWidth
-                    defaultValue={course?.data.description}
-                    required
-                  />
-                </Grid>
-              </Grid>
 
-              <Box className="text-end">
-                <Button variant="contained" color="success" type="submit">
-                  Save
-                </Button>
+                <Box className="text-end">
+                  <Button variant="contained" color="success" type="submit">
+                    Save
+                  </Button>
+                </Box>
               </Box>
             </Box>
-          </Box>
-        )}
+          )}
+        </Box>
       </Modal>
     </Fragment>
   );

@@ -52,10 +52,16 @@ export function deleteStudent() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
+        queryKey: ["getStudentDetail"],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["getStudents"],
       });
       queryClient.invalidateQueries({
         queryKey: ["getCourseDetail"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["courseStudents"],
       });
     },
   });

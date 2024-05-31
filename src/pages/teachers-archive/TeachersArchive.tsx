@@ -1,7 +1,3 @@
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
-
-// mui
 import {
   Table,
   TableBody,
@@ -14,28 +10,24 @@ import {
   TextField,
   Autocomplete,
   Avatar,
-  IconButton,
 } from "@mui/material";
 
-// icons
 import CircleIcon from "@mui/icons-material/Circle";
-import DeleteIcon from "@mui/icons-material/Delete";
 
-// react-query
 import { getStaff } from "../../services/queries";
 import { getStaffDataType } from "../../types/QueriesTypes";
 
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import EditTeacher from "../../components/edit-teacher/EditTeacher";
-import { deleteStaff } from "../../services/mutations";
 
-function Teachers() {
+function TeachersArchive() {
   const { data: staffs } = getStaff({
     limit: 0,
     offset: 1,
     viewModalStatus: true,
-    is_deleted: false,
+    is_deleted: true,
   });
-  const delStaff = deleteStaff();
 
   const [selectedTeacher, setSelectedTeacher] =
     useState<getStaffDataType | null>(null);
@@ -71,14 +63,12 @@ function Teachers() {
     }
   };
 
-  const handleDeleteStaff = (id: string) => {
-    delStaff.mutateAsync({ id: id });
-  };
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <header className="flex justify-between items-center mb-5">
-        <h2>Total : {staffs?.data?.data?.length} teachers</h2>
+        <h2>
+          Total : {!!staffs?.data?.data ? staffs.data.data.length : 0} teachers
+        </h2>
         <Autocomplete
           disablePortal
           id="combo-box-demo"
@@ -109,7 +99,6 @@ function Teachers() {
               <TableCell align="right">Telegram User</TableCell>
               <TableCell align="right">Phone</TableCell>
               <TableCell align="right">Course</TableCell>
-              <TableCell align="right">Delete</TableCell>
               <TableCell align="right">Edit</TableCell>
             </TableRow>
           </TableHead>
@@ -135,15 +124,6 @@ function Teachers() {
                   <TableCell align="right">{item.phone_number}</TableCell>
                   <TableCell align="right">{item.direction}</TableCell>
                   <TableCell align="right">
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteStaff(item.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell align="right">
                     <EditTeacher id={item.id} />
                   </TableCell>
                 </TableRow>
@@ -168,15 +148,7 @@ function Teachers() {
                   {selectedTeacher.phone_number}
                 </TableCell>
                 <TableCell align="right">{selectedTeacher.direction}</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleDeleteStaff(selectedTeacher.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+
                 <TableCell align="right">
                   <EditTeacher id={selectedTeacher.id} />
                 </TableCell>
@@ -189,4 +161,4 @@ function Teachers() {
   );
 }
 
-export default Teachers;
+export default TeachersArchive;

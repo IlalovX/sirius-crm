@@ -1,92 +1,63 @@
-import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-
-// mui
 import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  SelectChangeEvent,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  Box,
-  Select,
-  FormControl,
-  MenuItem,
-  InputLabel,
-  IconButton,
 } from "@mui/material";
-import { SelectChangeEvent } from "@mui/material/Select";
-
-// icons
-import DeleteIcon from "@mui/icons-material/Delete";
-
-// react-query
 import { getCourses } from "../../services/queries";
-import { deleteCourse } from "../../services/mutations";
+import { useState, useEffect } from "react";
 import { getCourseDataType } from "../../types/QueriesTypes";
-
+import { NavLink } from "react-router-dom";
 import EditCourse from "../../components/edit-course/EditCourse";
 
-function Courses() {
+function CoursesArchive() {
+  const [status, setStatus] = useState("COMPLETED");
   const { data: courses } = getCourses({
     limit: 0,
     offset: 1,
-    status: "",
-    is_deleted: false,
+    status: status,
+    is_deleted: true,
   });
-  const delCourse = deleteCourse();
-  const [filter, setFilter] = useState("Все");
   const [filteredCourses, setFilteredCourses] = useState(
     courses?.data?.data || []
   );
 
   const handleChange = (event: SelectChangeEvent) => {
-    setFilter(event.target.value as string);
-  };
-
-  const handleDeleteCourse = (id: string) => {
-    delCourse.mutateAsync({ id: id });
+    setStatus(event.target.value as string);
   };
 
   useEffect(() => {
     if (courses) {
       let updatedCourses: getCourseDataType[] = [...courses.data.data];
-      switch (filter) {
-        case "Убывание":
-          updatedCourses.sort((a, b) => b.price - a.price);
-          break;
-        case "Возрастание":
-          updatedCourses.sort((a, b) => a.price - b.price);
-          break;
-        case "Полный":
+      switch (status) {
+        case "COMPLETED":
           updatedCourses = updatedCourses.filter(
             (course) => course.status === "COMPLETED"
           );
           break;
-        case "В процессе":
-          updatedCourses = updatedCourses.filter(
-            (course) => course.status === "ACTIVE"
-          );
-          break;
-        case "Приостановленый":
+
+        case "SUSPENDED":
           updatedCourses = updatedCourses.filter(
             (course) => course.status === "SUSPENDED"
           );
           break;
-        case "В ожидании":
-          updatedCourses = updatedCourses.filter(
-            (course) => course.status === "PENDING"
-          );
-          break;
+
         default:
           updatedCourses = courses.data.data;
           break;
       }
       setFilteredCourses(updatedCourses);
     }
-  }, [courses, filter]);
+  }, [courses, status]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -98,17 +69,12 @@ function Courses() {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={filter}
+              value={status}
               label="Sort by:"
               onChange={handleChange}
             >
-              <MenuItem value="Все">Все</MenuItem>
-              <MenuItem value="Убывание">Убывание</MenuItem>
-              <MenuItem value="Возрастание">Возрастание</MenuItem>
-              <MenuItem value="Полный">Полный</MenuItem>
-              <MenuItem value="В процессе">В процессе</MenuItem>
-              <MenuItem value="Приостановленый">Приостановленый</MenuItem>
-              <MenuItem value="В ожидании">В ожидании</MenuItem>
+              <MenuItem value="COMPLETED">COMPLETED</MenuItem>
+              <MenuItem value="SUSPENDED">SUSPENDED</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -121,7 +87,6 @@ function Courses() {
               <TableCell align="right">Appointment Date</TableCell>
               <TableCell align="right">Price</TableCell>
               <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Delete</TableCell>
               <TableCell align="right">Edit</TableCell>
             </TableRow>
           </TableHead>
@@ -156,15 +121,6 @@ function Courses() {
                   </p>
                 </TableCell>
                 <TableCell align="right">
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleDeleteCourse(course.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-                <TableCell align="right">
                   <EditCourse id={course.id} />
                 </TableCell>
               </TableRow>
@@ -176,4 +132,4 @@ function Courses() {
   );
 }
 
-export default Courses;
+export default CoursesArchive;

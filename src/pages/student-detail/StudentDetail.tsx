@@ -1,3 +1,7 @@
+import { Fragment } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+// mui
 import {
   Box,
   List,
@@ -8,13 +12,15 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
+
+// icons
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { Fragment } from "react";
-import EditStudent from "../../components/edit-student/EditStudent";
-import { getStudentDetail } from "./services/queries";
+// react-query
 import { deleteStudent } from "../../services/mutations";
-import { useNavigate, useParams } from "react-router-dom";
+import { getStudentDetail } from "./services/queries";
+
+import EditStudent from "../../components/edit-student/EditStudent";
 
 function StudentDetail() {
   const { id } = useParams();
@@ -38,14 +44,16 @@ function StudentDetail() {
               {student?.data.first_name[0]}
             </Avatar>
           </ListItemAvatar>
-          <IconButton
-            edge="end"
-            aria-label="delete"
-            className="!absolute bottom-0 left-24"
-            onClick={() => handleDeleteStudent(student?.data.id as string)}
-          >
-            <DeleteIcon sx={{ height: 35, width: 35, color: "red" }} />
-          </IconButton>
+          {!student?.data.is_deleted && (
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              className="!absolute bottom-0 left-24"
+              onClick={() => handleDeleteStudent(student?.data.id as string)}
+            >
+              <DeleteIcon sx={{ height: 35, width: 35, color: "red" }} />
+            </IconButton>
+          )}
         </ListItem>
         <Box className="flex gap-5 !w-1/2">
           <ListItem className="!p-0">

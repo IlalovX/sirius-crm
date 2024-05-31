@@ -19,7 +19,12 @@ import { getStaff } from "../../../../services/queries";
 
 function SelectTeacher() {
   const dispatch = useAppDispatch();
-  const { data: teachers } = getStaff({ limit: 0, offset: 1,status:true });
+  const { data: teachers } = getStaff({
+    limit: 0,
+    offset: 1,
+    is_deleted: false,
+    viewModalStatus: true,
+  });
   const handleClick = (id: string) => {
     dispatch(setModalTeacher(id));
     dispatch(setModalCourseStep(3));

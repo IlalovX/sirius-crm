@@ -13,7 +13,7 @@ export function getStaffDetail({
 }) {
   const dispatch = useAppDispatch();
   return useQuery<getStaffDetailTypes, null>({
-    queryKey: ["getTeacherDetail", id],
+    queryKey: ["getTeacherDetail", id, status],
     queryFn: async () => {
       const res = await $host.get(`/staff/${id}`);
       dispatch(setTeacherDetail(res.data));

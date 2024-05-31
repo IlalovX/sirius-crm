@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { NavLink, Outlet } from "react-router-dom";
+
+// mui
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -6,19 +10,21 @@ import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+
+// icons
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import MenuIcon from "@mui/icons-material/Menu";
 import GroupIcon from "@mui/icons-material/Group";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LaptopIcon from "@mui/icons-material/Laptop";
 import MenuBook from "@mui/icons-material/MenuBook";
-import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import ArchiveIcon from "@mui/icons-material/Archive";
+
 import { MENU } from "../db/db";
 import AddModal from "../components/add-modal/AddModal";
 
@@ -98,7 +104,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -162,8 +168,10 @@ export default function MiniDrawer() {
                       <LaptopIcon />
                     ) : item.value === "Teachers" ? (
                       <MenuBook />
-                    ) : (
+                    ) : item.value === "Students" ? (
                       <GroupIcon />
+                    ) : (
+                      <ArchiveIcon />
                     )}
                   </ListItemIcon>
                   <ListItemText

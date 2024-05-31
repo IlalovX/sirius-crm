@@ -1,3 +1,8 @@
+import { Fragment, useState } from "react";
+import { useAppDispatch } from "../../utils/helpers";
+import { NavLink, useParams } from "react-router-dom";
+
+// mui
 import {
   Box,
   List,
@@ -18,24 +23,24 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+
+// icons
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CircleIcon from "@mui/icons-material/Circle";
-import { Fragment } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { useState } from "react";
-import { setModalReset } from "../../store/slice/modal";
-import AddStudent from "../../components/add-student/AddStudent";
+
+// react-query
 import { getCourseDetail } from "./services/queries";
 import { getStaffDetail } from "../teacher-detail/services/queries";
-import { useQueries } from "@tanstack/react-query";
-import { $host } from "../../services/requestServices";
-import { setData } from "../../store/slice/courseDetail";
-import { useAppDispatch, useAppSelector } from "../../utils/helpers";
-import { NavLink, useParams } from "react-router-dom";
-import EditStudent from "../../components/edit-student/EditStudent";
-import { getStudentDetailType } from "../student-detail/types/QueriesTypes";
 import { deleteStudent } from "../../services/mutations";
+
+import { setModalReset } from "../../store/slice/modal";
+import AddStudent from "../../components/add-student/AddStudent";
+import { useGetStudents } from "../../services/queries";
+import { getCourseDetailType } from "./types/QueriesTypes";
+import { getStudentDetailType } from "../student-detail/types/QueriesTypes";
+import EditStudent from "../../components/edit-student/EditStudent";
 
 const style = {
   position: "absolute" as "absolute",
@@ -54,9 +59,7 @@ function CourseDetail() {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
-  const courseStudents = useAppSelector(
-    (state) => state.courseDetail.courseStudents
-  );
+
   const delStudent = deleteStudent();
   const { data: course } = getCourseDetail({ id: id as string, open: true });
   const { data: teacher } = getStaffDetail({
@@ -64,22 +67,8 @@ function CourseDetail() {
     status: true,
   });
 
-  useQueries({
-    queries:
-      course?.data?.students?.map((item) => {
-        return {
-          queryKey: [course, item],
-          queryFn: async () => {
-            const res = await $host.get(`/student/${item}`);
-            return res.data;
-          },
-          onSuccess: (res: getStudentDetailType) => {
-            dispatch(setData(res.data));
-          },
-          refetchOnWindowFocus: false,
-          retry: false,
-        };
-      }) ?? [],
+  const studentsQueries = useGetStudents({
+    course: course as getCourseDetailType,
   });
 
   const handleOpen = () => {
@@ -238,56 +227,64 @@ function CourseDetail() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {!!courseStudents &&
-                  courseStudents?.map((student, index) => (
-                    <TableRow key={index}>
-                      <TableCell component="th" scope="row">
-                        <Avatar
-                          sx={{ height: 40, width: 40 }}
-                          alt={student.id}
-                        />
-                      </TableCell>
-                      <TableCell component="th" scope="row">
-                        <NavLink to={`/students/${student?.id}`}>
-                          {student?.first_name}
-                        </NavLink>
-                      </TableCell>
-                      <TableCell align="right">
-                        {!!student?.tg_username
-                          ? student.tg_username
-                          : "Не указано"}
-                      </TableCell>
-                      <TableCell align="right">
-                        {student?.phone_number}
-                      </TableCell>
-                      <TableCell align="right">
-                        {student?.group.title}
-                      </TableCell>
-                      <TableCell align="right">{student?.comment}</TableCell>
-                      <TableCell align="right">
-                        {new Date(student?.created_at).getDay() < 10
-                          ? `0${new Date(student?.created_at).getDay()}`
-                          : new Date(student?.created_at).getDay()}
-                        .
-                        {new Date(student?.created_at).getMonth() < 10
-                          ? `0${new Date(student?.created_at).getDay()}`
-                          : new Date(student?.created_at).getDay()}
-                        .{new Date(student?.created_at).getFullYear()}
-                      </TableCell>
-                      <TableCell align="right">
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={() => handleDeleteStudent(student.id)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell align="right">
-                        <EditStudent id={student?.id} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                {!!studentsQueries &&
+                  studentsQueries?.map(
+                    (student: getStudentDetailType, index) => (
+                      <TableRow key={index}>
+                        <TableCell component="th" scope="row">
+                          <Avatar
+                            sx={{ height: 40, width: 40 }}
+                            alt={student?.data.id}
+                          />
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          <NavLink to={`/students/${student?.data.id}`}>
+                            {student?.data.first_name}
+                          </NavLink>
+                        </TableCell>
+                        <TableCell align="right">
+                          {!!student?.data.tg_username
+                            ? student?.data.tg_username
+                            : "Не указано"}
+                        </TableCell>
+                        <TableCell align="right">
+                          {student?.data.phone_number}
+                        </TableCell>
+                        <TableCell align="right">
+                          {!!student?.data.group
+                            ? student?.data.group.title
+                            : ""}
+                        </TableCell>
+                        <TableCell align="right">
+                          {student?.data.comment}
+                        </TableCell>
+                        <TableCell align="right">
+                          {new Date(student?.data.created_at).getDay() < 10
+                            ? `0${new Date(student?.data.created_at).getDay()}`
+                            : new Date(student?.data.created_at).getDay()}
+                          .
+                          {new Date(student?.data.created_at).getMonth() < 10
+                            ? `0${new Date(student?.data.created_at).getDay()}`
+                            : new Date(student?.data.created_at).getDay()}
+                          .{new Date(student?.data.created_at).getFullYear()}
+                        </TableCell>
+                        <TableCell align="right">
+                          <IconButton
+                            edge="end"
+                            aria-label="delete"
+                            onClick={() =>
+                              handleDeleteStudent(student?.data.id)
+                            }
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                        <TableCell align="right">
+                          <EditStudent id={student?.data.id} />
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
               </TableBody>
             </Table>
           </TableContainer>

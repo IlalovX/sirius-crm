@@ -1,3 +1,7 @@
+import { Fragment } from "react";
+import { NavLink } from "react-router-dom";
+
+// mui
 import {
   Avatar,
   Box,
@@ -9,23 +13,41 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import { Fragment } from "react";
+
+// icons
 import Customer from "../../assets/svg/Customers.svg";
 import CustomerNull from "../../assets/svg/CustomersNull.svg";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import Courses from "../../assets/svg/Courses.svg";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CoursesNull from "../../assets/svg/CoursesNull.svg";
-import { NavLink } from "react-router-dom";
+
+// react-query
+import { getCourses, getStudents, getStaff } from "../../services/queries";
+
 import { Consts } from "../../routes/consts/Consts";
 import { Enums } from "../../routes/enums/Enums";
 import EditTeacher from "../../components/edit-teacher/EditTeacher";
-import { getCourses, getStudents, getStaff } from "../../services/queries";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function Home() {
-  const { data: teachers } = getStaff({ limit: 0, offset: 1, status: true });
-  const { data: courses } = getCourses({ limit: 0, offset: 1 });
-  const { data: students } = getStudents({ limit: 0, offset: 1 });
+  const { data: teachers } = getStaff({
+    limit: 0,
+    offset: 1,
+    viewModalStatus: true,
+    is_deleted: false,
+  });
+  const { data: courses } = getCourses({
+    limit: 10,
+    offset: 1,
+    status: "",
+    is_deleted: false,
+  });
+  const { data: students } = getStudents({
+    limit: 0,
+    offset: 1,
+    status: "",
+    is_deleted: false,
+  });
 
   return (
     <Fragment>

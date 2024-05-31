@@ -16,6 +16,10 @@ export function useEditStudent({ id }: { id: string }) {
       queryClient.invalidateQueries({
         queryKey: ["getStudents"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["getCourseDetail"],
+      });
+      queryClient.invalidateQueries(["courseStudents"]);
     },
   });
 }

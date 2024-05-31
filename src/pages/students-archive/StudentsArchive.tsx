@@ -1,53 +1,43 @@
+import { getStudents } from "../../services/queries";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
-
-// mui
+import { getStudentsDataType } from "../../types/QueriesTypes";
 import {
+  Autocomplete,
+  Avatar,
+  Box,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  IconButton,
-  Box,
   TextField,
-  Autocomplete,
-  Avatar,
 } from "@mui/material";
-
-// icons
-import DeleteIcon from "@mui/icons-material/Delete";
-import CircleIcon from "@mui/icons-material/Circle";
-
-// react-query
-import { getStudents } from "../../services/queries";
-import { deleteStudent } from "../../services/mutations";
-import { getStudentsDataType } from "../../types/QueriesTypes";
-
 import EditStudent from "../../components/edit-student/EditStudent";
+import CircleIcon from "@mui/icons-material/Circle";
+import { NavLink } from "react-router-dom";
 
-function Students() {
+function StudentsArchive() {
   const { data: students } = getStudents({
     limit: 10,
     offset: 1,
     status: "",
-    is_deleted: false,
+    is_deleted: true,
   });
-  const delStudent = deleteStudent();
 
   const [selectedStudent, setSelectedTeacher] =
     useState<getStudentsDataType | null>(null);
   const [showAllTeachers, setShowAllTeachers] = useState<boolean>(true);
 
   const handleAutocompleteChange = (
-    _: React.ChangeEvent<{}>,
+    e: React.ChangeEvent<{}>,
     value: getStudentsDataType | string | null
   ) => {
+    e;
     if (typeof value === "string") {
       const student = students?.data.data.find(
-        (row) => row.first_name === value
+        (item) => item.first_name === value
       );
       setSelectedTeacher(student || null);
       setShowAllTeachers(!student);
@@ -65,10 +55,6 @@ function Students() {
     if (reason === "clear") {
       setShowAllTeachers(true);
     }
-  };
-
-  const handleDeleteStudent = (id: string) => {
-    delStudent.mutateAsync({ id: id });
   };
 
   return (
@@ -107,7 +93,6 @@ function Students() {
               <TableCell align="right">Status</TableCell>
               <TableCell align="right">Comment</TableCell>
               <TableCell align="right">Record</TableCell>
-              <TableCell align="right">Delete</TableCell>
               <TableCell align="right">Edit</TableCell>
             </TableRow>
           </TableHead>
@@ -134,6 +119,7 @@ function Students() {
                       {item.status}
                     </p>
                   </TableCell>
+
                   <TableCell align="right">{item.comment}</TableCell>
                   <TableCell align="right">
                     {new Date(item.created_at).getDay() < 10
@@ -145,15 +131,7 @@ function Students() {
                       : new Date(item.created_at).getDay()}
                     .{new Date(item.created_at).getFullYear()}
                   </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteStudent(item.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
+
                   <TableCell align="right">
                     <EditStudent id={item.id} />
                   </TableCell>
@@ -197,15 +175,7 @@ function Students() {
                     : new Date(selectedStudent.created_at).getDay()}
                   .{new Date(selectedStudent.created_at).getFullYear()}
                 </TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleDeleteStudent(selectedStudent.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+
                 <TableCell align="right">
                   <EditStudent id={selectedStudent.id} />
                 </TableCell>
@@ -218,4 +188,4 @@ function Students() {
   );
 }
 
-export default Students;
+export default StudentsArchive;

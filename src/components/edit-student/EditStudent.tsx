@@ -37,7 +37,7 @@ function EditStudent({ id }: { id: string }) {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const editStudent = useEditStudent({ id: id });
-  const { data: student } = getStudentDetail({ id: id, open: open });
+  const { data: student, isLoading } = getStudentDetail({ id: id, open: open });
 
   const handleOpen = () => {
     setOpen(true);
@@ -79,104 +79,114 @@ function EditStudent({ id }: { id: string }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit Student
-            </Typography>
-            <IconButton onClick={handleClose} edge="end" aria-label="edit">
-              <CancelRoundedIcon />
-            </IconButton>
-          </Box>
-          <Divider variant="fullWidth" />
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ flexGrow: 1 }}
-            className="my-5 space-y-5"
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={6}>
-                <TextField
-                  id="outlined-basic"
-                  label="First Name"
-                  variant="outlined"
-                  name="first_name"
-                  defaultValue={student?.data.first_name}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="outlined-basic"
-                  label="Last Name"
-                  name="last_name"
-                  variant="outlined"
-                  defaultValue={student?.data.last_name}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="outlined-basic"
-                  label="Telegram User"
-                  name="telegram"
-                  variant="outlined"
-                  defaultValue={student?.data.tg_username}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="outlined-basic"
-                  label="Phone"
-                  name="phone_number"
-                  variant="outlined"
-                  defaultValue={student?.data.phone_number}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl className="!w-full">
-                  <InputLabel id="demo-simple-select-label">Status</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    name="status"
-                    label="Status"
-                    defaultValue={student?.data.status}
-                  >
-                    <MenuItem value={"ATTENDING"}>ATTENDING</MenuItem>
-                    <MenuItem value={"PENDING"}>PENDING</MenuItem>
-                    <MenuItem value={"SUSPENDED"}>SUSPENDED</MenuItem>
-                    <MenuItem value={"COMPLETED"}>COMPLETED</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  id="outlined-multiline-static"
-                  label="Comment"
-                  name="comment"
-                  multiline
-                  rows={4}
-                  defaultValue={student?.data.comment}
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-            <Box className="text-end">
-              <Button variant="contained" color="success" type="submit">
-                Save
-              </Button>
+          {isLoading ? (
+            <Box className="flex items-center justify-center">
+              <span className="text-4xl">Loading...</span>
             </Box>
-          </Box>
+          ) : (
+            <Box>
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Edit Student
+                </Typography>
+                <IconButton onClick={handleClose} edge="end" aria-label="edit">
+                  <CancelRoundedIcon />
+                </IconButton>
+              </Box>
+              <Divider variant="fullWidth" />
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                sx={{ flexGrow: 1 }}
+                className="my-5 space-y-5"
+              >
+                <Grid container spacing={3}>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="outlined-basic"
+                      label="First Name"
+                      variant="outlined"
+                      name="first_name"
+                      defaultValue={student?.data.first_name}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="outlined-basic"
+                      label="Last Name"
+                      name="last_name"
+                      variant="outlined"
+                      defaultValue={student?.data.last_name}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="outlined-basic"
+                      label="Telegram User"
+                      name="telegram"
+                      variant="outlined"
+                      defaultValue={student?.data.tg_username}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="outlined-basic"
+                      label="Phone"
+                      name="phone_number"
+                      variant="outlined"
+                      defaultValue={student?.data.phone_number}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl className="!w-full">
+                      <InputLabel id="demo-simple-select-label">
+                        Status
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        name="status"
+                        label="Status"
+                        defaultValue={student?.data.status}
+                      >
+                        <MenuItem value={"ATTENDING"}>ATTENDING</MenuItem>
+                        <MenuItem value={"PENDING"}>PENDING</MenuItem>
+                        <MenuItem value={"SUSPENDED"}>SUSPENDED</MenuItem>
+                        <MenuItem value={"COMPLETED"}>COMPLETED</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="Comment"
+                      name="comment"
+                      multiline
+                      rows={4}
+                      defaultValue={student?.data.comment}
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
+                <Box className="text-end">
+                  <Button variant="contained" color="success" type="submit">
+                    Save
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+          )}
         </Box>
       </Modal>
     </Box>

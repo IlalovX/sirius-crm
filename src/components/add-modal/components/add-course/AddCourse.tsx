@@ -38,11 +38,12 @@ function AddCourse({ onClose }: { onClose: () => void }) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
+
     if (data) {
       addGroup
         .mutateAsync({
           description: data.get("desc") as string,
-          duration: data.get("duration") as string,
+          duration: `${data.get("duration") as string} month`,
           lesson_days: data.get("days") as string,
           lesson_duration: data.get("lessonDuration") as string,
           lesson_time: data.get("time") as string,
@@ -151,14 +152,21 @@ function AddCourse({ onClose }: { onClose: () => void }) {
         </ListItem>
         <ListItem className="!p-0">
           <Box className="flex gap-5 !w-full">
-            <TextField
-              id="outlined-multiline-static"
-              label="Duration"
-              className="!w-full"
-              name="duration"
-              autoComplete="duration"
-              required
-            />
+            <FormControl className="!w-full">
+              <InputLabel id="demo-simple-select-label">
+                Lesson Duration
+              </InputLabel>
+              <Select
+                label="Lesson Duration"
+                name="duration"
+                required
+                autoComplete="lessonDuration"
+              >
+                <MenuItem value={"2"}>2</MenuItem>
+                <MenuItem value={"6"}>6</MenuItem>
+                <MenuItem value={"8"}>8</MenuItem>
+              </Select>
+            </FormControl>
             <FormControl className="!w-full">
               <InputLabel id="demo-simple-select-label">
                 Lesson Duration
