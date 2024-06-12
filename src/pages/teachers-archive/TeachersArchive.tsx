@@ -19,7 +19,6 @@ import { getStaffDataType } from "../../types/QueriesTypes";
 
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import EditTeacher from "../../components/edit-teacher/EditTeacher";
 
 function TeachersArchive() {
   const { data: staffs } = getStaff({
@@ -99,7 +98,6 @@ function TeachersArchive() {
               <TableCell align="right">Telegram User</TableCell>
               <TableCell align="right">Phone</TableCell>
               <TableCell align="right">Course</TableCell>
-              <TableCell align="right">Edit</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -123,9 +121,6 @@ function TeachersArchive() {
                   <TableCell align="right">{item.tg_username}</TableCell>
                   <TableCell align="right">{item.phone_number}</TableCell>
                   <TableCell align="right">{item.direction}</TableCell>
-                  <TableCell align="right">
-                    <EditTeacher id={item.id} />
-                  </TableCell>
                 </TableRow>
               ))
             ) : selectedTeacher ? (
@@ -148,10 +143,6 @@ function TeachersArchive() {
                   {selectedTeacher.phone_number}
                 </TableCell>
                 <TableCell align="right">{selectedTeacher.direction}</TableCell>
-
-                <TableCell align="right">
-                  <EditTeacher id={selectedTeacher.id} />
-                </TableCell>
               </TableRow>
             ) : null}
           </TableBody>

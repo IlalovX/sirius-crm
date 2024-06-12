@@ -14,7 +14,6 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import EditStudent from "../../components/edit-student/EditStudent";
 import CircleIcon from "@mui/icons-material/Circle";
 import { NavLink } from "react-router-dom";
 
@@ -93,7 +92,6 @@ function StudentsArchive() {
               <TableCell align="right">Status</TableCell>
               <TableCell align="right">Comment</TableCell>
               <TableCell align="right">Record</TableCell>
-              <TableCell align="right">Edit</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -130,10 +128,6 @@ function StudentsArchive() {
                       ? `0${new Date(item.created_at).getDay()}`
                       : new Date(item.created_at).getDay()}
                     .{new Date(item.created_at).getFullYear()}
-                  </TableCell>
-
-                  <TableCell align="right">
-                    <EditStudent id={item.id} />
                   </TableCell>
                 </TableRow>
               ))
@@ -174,10 +168,6 @@ function StudentsArchive() {
                     ? `0${new Date(selectedStudent.created_at).getDay()}`
                     : new Date(selectedStudent.created_at).getDay()}
                   .{new Date(selectedStudent.created_at).getFullYear()}
-                </TableCell>
-
-                <TableCell align="right">
-                  <EditStudent id={selectedStudent.id} />
                 </TableCell>
               </TableRow>
             ) : null}

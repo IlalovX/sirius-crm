@@ -51,8 +51,9 @@ function EditTeacher({ id }: { id: string }) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    if (data) {
+    const form = e.currentTarget;
+    if (form.checkValidity()) {
+      const data = new FormData(e.currentTarget);
       editStaff
         .mutateAsync({
           first_name: data.get("firstName") as string,
@@ -65,6 +66,8 @@ function EditTeacher({ id }: { id: string }) {
         .then(() => {
           handleClose();
         });
+    } else {
+      form.reportValidity();
     }
   };
   return (

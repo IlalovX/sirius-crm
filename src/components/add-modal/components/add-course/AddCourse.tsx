@@ -35,11 +35,11 @@ function AddCourse({ onClose }: { onClose: () => void }) {
     dispatch(setModalCourseStep(1));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-
-    if (data) {
+    const form = e.currentTarget;
+    if (form.checkValidity()) {
+      const data = new FormData(e.currentTarget);
       addGroup
         .mutateAsync({
           description: data.get("desc") as string,
@@ -56,6 +56,8 @@ function AddCourse({ onClose }: { onClose: () => void }) {
         .then(() => {
           onClose();
         });
+    } else {
+      form.reportValidity();
     }
   };
 

@@ -18,11 +18,12 @@ function AddStudent({
   handleClose: () => void;
 }) {
   const addStudent = useAddStudent();
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    if (data) {
-      addStudent
+    const form = e.currentTarget;
+    if (form.checkValidity()) {
+      const data = new FormData(e.currentTarget);
+      await addStudent
         .mutateAsync({
           first_name: data.get("firstName") as string,
           last_name: data.get("lastName") as string,
@@ -33,6 +34,8 @@ function AddStudent({
           status: data.get("status") as string,
         })
         .then(() => handleClose());
+    } else {
+      form.reportValidity();
     }
   };
 

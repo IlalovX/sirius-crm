@@ -17,7 +17,6 @@ import { getCourses } from "../../services/queries";
 import { useState, useEffect } from "react";
 import { getCourseDataType } from "../../types/QueriesTypes";
 import { NavLink } from "react-router-dom";
-import EditCourse from "../../components/edit-course/EditCourse";
 
 function CoursesArchive() {
   const [status, setStatus] = useState("COMPLETED");
@@ -87,7 +86,6 @@ function CoursesArchive() {
               <TableCell align="right">Appointment Date</TableCell>
               <TableCell align="right">Price</TableCell>
               <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Edit</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -119,9 +117,6 @@ function CoursesArchive() {
                   <p className="py-2 px-5 bg-almost-grey rounded-2xl inline text-blue-500 text-xs">
                     {course.status}
                   </p>
-                </TableCell>
-                <TableCell align="right">
-                  <EditCourse id={course.id} />
                 </TableCell>
               </TableRow>
             ))}

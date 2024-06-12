@@ -61,8 +61,9 @@ function EditCourse({ id }: { id: string }) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    if (data) {
+    const form = e.currentTarget;
+    if (form.checkValidity()) {
+      const data = new FormData(e.currentTarget);
       editGroup
         .mutateAsync({
           description: data.get("desc") as string,
@@ -81,6 +82,8 @@ function EditCourse({ id }: { id: string }) {
         .then(() => {
           handleClose();
         });
+    } else {
+      form.reportValidity();
     }
   };
 

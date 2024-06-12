@@ -12,22 +12,22 @@ import { useAddStaff } from "../../../../services/mutations";
 
 function AddTeacher({ onClose }: { onClose: () => void }) {
   const addTeacher = useAddStaff();
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    if (data) {
-      addTeacher
-        .mutateAsync({
-          first_name: data.get("firstName") as string,
-          last_name: data.get("lastName") as string,
-          direction: data.get("direction") as string,
-          phone_number: data.get("phone") as string,
-          role: data.get("role") as string,
-          tg_username: data.get("telegram") as string,
-        })
-        .then(() => {
-          onClose();
-        });
+    const form = e.currentTarget;
+    if (form.checkValidity()) {
+      const data = new FormData(form);
+      await addTeacher.mutateAsync({
+        first_name: data.get("firstName") as string,
+        last_name: data.get("lastName") as string,
+        direction: data.get("direction") as string,
+        phone_number: data.get("phone") as string,
+        role: data.get("role") as string,
+        tg_username: data.get("telegram") as string,
+      });
+      onClose();
+    } else {
+      form.reportValidity();
     }
   };
 
